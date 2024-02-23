@@ -1174,8 +1174,8 @@ endif()
 if(BUILD_GUI)
     if(USE_SYSTEM_IMGUI)
         open3d_find_package_3rdparty_library(3rdparty_imgui
-            PACKAGE ImGui
-            TARGETS ImGui::ImGui
+            PACKAGE imgui
+            TARGETS imgui::imgui
         )
         if(NOT 3rdparty_imgui_FOUND)
             set(USE_SYSTEM_IMGUI OFF)
