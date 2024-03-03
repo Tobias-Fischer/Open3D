@@ -65,15 +65,22 @@ function(open3d_add_encoded_shader target)
     )
 endfunction()
 
+set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 # Helper target for open3d_add_encoded_shader
 if (NOT TARGET ShaderEncoder)
     add_executable(ShaderEncoder EXCLUDE_FROM_ALL)
     target_sources(ShaderEncoder PRIVATE ${CMAKE_CURRENT_LIST_DIR}/ShaderEncoder.cpp)
     target_compile_features(ShaderEncoder PRIVATE cxx_std_14)
+    # Set the runtime output directory for ShaderEncoder
+    set_target_properties(ShaderEncoder PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${BUILD_PREFIX}/bin")
 endif()
 
 if (NOT TARGET ShaderLinker)
     add_executable(ShaderLinker EXCLUDE_FROM_ALL)
     target_sources(ShaderLinker PRIVATE ${CMAKE_CURRENT_LIST_DIR}/ShaderLinker.cpp)
     target_compile_features(ShaderLinker PRIVATE cxx_std_14)
+    # Set the runtime output directory for ShaderLinker
+    set_target_properties(ShaderLinker PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${BUILD_PREFIX}/bin")
 endif()
