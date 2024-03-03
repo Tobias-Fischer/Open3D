@@ -82,6 +82,8 @@ target_sources(Open3D PRIVATE
     Open3DConfig.cpp
 )
 
+target_link_libraries(Open3D "-framework Security")
+
 open3d_ispc_target_sources_TARGET_OBJECTS(Open3D PRIVATE
     camera
     core
