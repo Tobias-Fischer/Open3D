@@ -1884,6 +1884,7 @@ endif ()
 if(USE_SYSTEM_EMBREE)
     open3d_find_package_3rdparty_library(3rdparty_embree
         PACKAGE embree
+        VERSION 3.13.0
         TARGETS embree
     )
     if(NOT 3rdparty_embree_FOUND)
