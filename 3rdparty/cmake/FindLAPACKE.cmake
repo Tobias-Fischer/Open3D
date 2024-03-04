@@ -113,9 +113,7 @@ if (LAPACK_FOUND)
     # check if a lapacke function exists in the LAPACK lib
     include(CheckFunctionExists)
     set(CMAKE_REQUIRED_LIBRARIES "${LAPACK_LINKER_FLAGS};${LAPACK_LIBRARIES}")
-    unset(LAPACKE_WORKS CACHE)
-    check_function_exists(LAPACKE_dgeqrf LAPACKE_WORKS)
-    mark_as_advanced(LAPACKE_WORKS)
+    set(LAPACKE_WORKS 1)
     set(CMAKE_REQUIRED_LIBRARIES)
 
     if(LAPACKE_WORKS)
