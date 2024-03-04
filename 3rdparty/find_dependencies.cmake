@@ -1282,7 +1282,7 @@ if(BUILD_GUI)
                 # version.
                 execute_process(COMMAND ${FILAMENT_CXX_COMPILER} --version OUTPUT_VARIABLE clang_version)
                 if(clang_version MATCHES "clang version ([0-9]+)")
-                    set(CLANG_LIBDIR "/usr/lib/llvm-${CMAKE_MATCH_1}/lib")
+                    set(CLANG_LIBDIR "/usr/lib/llvm-${CMAKE_MATCH_1}/lib" CACHE PATH "Path to Clang libdir")
                 endif()
             endif()
             include(${Open3D_3RDPARTY_DIR}/filament/filament_build.cmake)
