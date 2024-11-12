@@ -14,6 +14,12 @@
 #pragma once
 
 #ifdef USE_BLAS
+#if defined(_MSC_VER)
+    #include <complex.h>
+    #define LAPACK_COMPLEX_CUSTOM
+    #define lapack_complex_float _Fcomplex
+    #define lapack_complex_double _Dcomplex
+#endif
 #define OPEN3D_CPU_LINALG_INT int32_t
 #define lapack_int int32_t
 #include <cblas.h>
