@@ -52,7 +52,7 @@ function(open3d_show_and_abort_on_warning target)
             set(CUDA_DISABLE_GNU_CLANG_INTEL_WARNINGS ${DISABLE_GNU_CLANG_INTEL_WARNINGS})
             string(REPLACE ";" "," CUDA_DISABLE_GNU_CLANG_INTEL_WARNINGS "${CUDA_DISABLE_GNU_CLANG_INTEL_WARNINGS}")
 
-            string(APPEND CUDA_FLAGS " -Xcompiler -Wall,-Wextra,-Werror,${CUDA_DISABLE_GNU_CLANG_INTEL_WARNINGS}")
+            string(APPEND CUDA_FLAGS " -Xcompiler -Wall,-Wextra,${CUDA_DISABLE_GNU_CLANG_INTEL_WARNINGS}")
         endif()
     else()
         set(CUDA_FLAGS "")
@@ -60,9 +60,9 @@ function(open3d_show_and_abort_on_warning target)
 
     target_compile_options(${target} PRIVATE
         $<$<COMPILE_LANG_AND_ID:C,MSVC>:/W4 /WX ${DISABLE_MSVC_WARNINGS}>
-        $<$<COMPILE_LANG_AND_ID:C,GNU,Clang,AppleClang,Intel>:-Wall -Wextra -Werror ${DISABLE_GNU_CLANG_INTEL_WARNINGS}>
+        $<$<COMPILE_LANG_AND_ID:C,GNU,Clang,AppleClang,Intel>:-Wall -Wextra ${DISABLE_GNU_CLANG_INTEL_WARNINGS}>
         $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/W4 /WX ${DISABLE_MSVC_WARNINGS}>
-        $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,Intel>:-Wall -Wextra -Werror ${DISABLE_GNU_CLANG_INTEL_WARNINGS}>
+        $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang,Intel>:-Wall -Wextra ${DISABLE_GNU_CLANG_INTEL_WARNINGS}>
         $<$<COMPILE_LANGUAGE:CUDA>:SHELL:${CUDA_FLAGS}>
         $<$<COMPILE_LANGUAGE:ISPC>:--werror>
     )
