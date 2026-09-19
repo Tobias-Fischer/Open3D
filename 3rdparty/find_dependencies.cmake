@@ -1416,24 +1416,47 @@ endif()
 # Filament
 if(BUILD_GUI)
     if(USE_SYSTEM_FILAMENT)
-        # Filament does not install a CMake package configuration upstream, so
-        # the naming comes from whoever packaged it. conda-forge ships
-        # lib/cmake/Filament/FilamentConfig.cmake, which exports the Filament::
-        # namespace.
+        # Filament installs no CMake package configuration upstream, so both
+        # the package name and the namespace depend on who packaged it.
+        # conda-forge ships lib/cmake/Filament/FilamentConfig.cmake exporting
+        # Filament::; accept the lowercase spelling too rather than replace it.
         #
         # ktxreader is required: FilamentResourceManager constructs
         # image::Ktx1Bundle and calls ktxreader::Ktx1Reader::createTexture() when
         # loading the IBL and skybox textures. It pulls in image transitively.
-        open3d_find_package_3rdparty_library(3rdparty_filament
-            PACKAGE Filament
-            TARGETS Filament::filament Filament::backend Filament::geometry
-                    Filament::ktxreader Filament::utils
-        )
+        set(_open3d_filament_package "")
+        foreach(_open3d_filament_candidate Filament filament)
+            find_package(${_open3d_filament_candidate} QUIET)
+            if(${_open3d_filament_candidate}_FOUND)
+                set(_open3d_filament_package ${_open3d_filament_candidate})
+                break()
+            endif()
+        endforeach()
+        # Decide the namespace from the targets that were actually defined:
+        # on a case-insensitive filesystem find_package() may answer to a
+        # spelling that does not match the namespace the config exports.
+        if(TARGET filament::filament)
+            set(_open3d_filament_ns filament)
+        else()
+            set(_open3d_filament_ns Filament)
+        endif()
+        if(_open3d_filament_package)
+            open3d_find_package_3rdparty_library(3rdparty_filament
+                PACKAGE ${_open3d_filament_package}
+                TARGETS ${_open3d_filament_ns}::filament
+                        ${_open3d_filament_ns}::backend
+                        ${_open3d_filament_ns}::geometry
+                        ${_open3d_filament_ns}::ktxreader
+                        ${_open3d_filament_ns}::utils
+            )
+        endif()
+        unset(_open3d_filament_candidate)
+        unset(_open3d_filament_package)
         if(3rdparty_filament_FOUND)
             # Use the matc that ships with the package rather than assuming a
             # system-wide install path.
-            if(TARGET Filament::matc)
-                set(FILAMENT_MATC Filament::matc)
+            if(TARGET ${_open3d_filament_ns}::matc)
+                set(FILAMENT_MATC ${_open3d_filament_ns}::matc)
             elseif(NOT FILAMENT_MATC)
                 find_program(FILAMENT_MATC matc)
             endif()
