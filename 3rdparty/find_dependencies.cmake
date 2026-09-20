@@ -1424,6 +1424,11 @@ if(BUILD_GUI)
         # ktxreader is required: FilamentResourceManager constructs
         # image::Ktx1Bundle and calls ktxreader::Ktx1Reader::createTexture() when
         # loading the IBL and skybox textures. It pulls in image transitively.
+        #
+        # bluegl is named explicitly because Visualizer::InitOpenGL calls
+        # bluegl::bind(). Where BlueGL is a shared library it also arrives
+        # through backend's link interface, but on Windows it is static and
+        # outside that interface, so relying on the transitive edge fails.
         set(_open3d_filament_package "")
         foreach(_open3d_filament_candidate Filament filament)
             find_package(${_open3d_filament_candidate} QUIET)
@@ -1445,6 +1450,7 @@ if(BUILD_GUI)
                 PACKAGE ${_open3d_filament_package}
                 TARGETS ${_open3d_filament_ns}::filament
                         ${_open3d_filament_ns}::backend
+                        ${_open3d_filament_ns}::bluegl
                         ${_open3d_filament_ns}::geometry
                         ${_open3d_filament_ns}::ktxreader
                         ${_open3d_filament_ns}::utils
